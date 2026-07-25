@@ -1,0 +1,9 @@
+*.local
+*.secret
+.env
+.env.*
+secrets*
+*token*
+node_modules/
+__pycache__/
+*.pyc

@@ -1,0 +1,17 @@
+{
+  "name": "claude-sessions-toolkit",
+  "owner": {
+    "name": "Florent Maisoncelle"
+  },
+  "metadata": {
+    "description": "Retrouve, relance et transporte des sessions Claude Code entre comptes et entre PC, sans jamais perdre le contexte.",
+    "version": "0.1.0"
+  },
+  "plugins": [
+    {
+      "name": "claude-sessions-toolkit",
+      "source": "./",
+      "description": "Retrouve et relance une session Claude Code perdue (autre compte, sidebar vide, session morte), et transporte des sessions entre deux PC."
+    }
+  ]
+}

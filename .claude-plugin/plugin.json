@@ -1,0 +1,10 @@
+{
+  "name": "claude-sessions-toolkit",
+  "description": "Retrouve et relance une session Claude Code perdue (autre compte, sidebar vide, session morte) sans jamais devoir ré-exporter au préalable, et transporte des sessions entre deux PC via un bundle exportable. Zéro compte actif requis, zéro token consommé : tout est déjà en local sur le disque, ce plugin sait juste où chercher.",
+  "version": "0.1.0",
+  "author": {
+    "name": "Florent Maisoncelle"
+  },
+  "homepage": "https://github.com/Gremelinn0/productivity-claude-sessions-toolkit",
+  "repository": "https://github.com/Gremelinn0/productivity-claude-sessions-toolkit"
+}
