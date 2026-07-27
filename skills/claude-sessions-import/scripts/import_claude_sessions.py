@@ -14,25 +14,25 @@ Comment Claude Code range une session :
 ou <cwd-encode> = le chemin de travail (cwd) avec CHAQUE caractere non alphanumerique
 remplace par '-'. Exemple verifie :
 
-    C:\\Users\\Utilisateur\\PROJECTS\\3- Wisper\\speak-app-dev
- -> C--Users-Utilisateur-PROJECTS-3--Wisper-speak-app-dev
+    C:\\Users\\<toi>\\Projets\\mon-projet
+ -> C--Users-<toi>-Projets-mon-projet
 
 Donc "reinjecter" = recalculer ce dossier sur le PC cible et y deposer le .jsonl. Le piege :
 le nom d'utilisateur / le chemin DIFFERE souvent d'un PC a l'autre (ex Administrateur vs
-Utilisateur) -> le dossier encode change -> sans remap, `claude --resume` ne retrouve rien.
+Utilisateur, ou alice vs bob) -> le dossier encode change -> sans remap, `claude --resume` ne retrouve rien.
 
 Ce script lit le `cwd` d'origine DANS chaque .jsonl, le remappe (--auto-user par defaut +
 --remap optionnels), l'encode, et copie le .jsonl au bon endroit. Il ecrit aussi un
 REPRISE-IMPORT.md avec les commandes exactes, deja remappees.
 
-La logique vit dans `import_bundle()` (reutilisable par l'app SpeakApp = bouton Reglages).
+La logique vit dans `import_bundle()` (reutilisable : CLI, ou embarque dans une app).
 
 Usage CLI :
-    py tools/import_claude_sessions.py "<dossier-bundle-exporte>"
-    py tools/import_claude_sessions.py "<bundle>" --dry-run
-    py tools/import_claude_sessions.py "<bundle>" --remap "Utilisateur=Administrateur"
-    py tools/import_claude_sessions.py "<bundle>" --remap "C:\\Users\\Flo\\old=D:\\projets" --force
-    py tools/import_claude_sessions.py "<bundle>" --projects-dir "<dossier de test>"
+    py scripts/import_claude_sessions.py "<dossier-bundle-exporte>"
+    py scripts/import_claude_sessions.py "<bundle>" --dry-run
+    py scripts/import_claude_sessions.py "<bundle>" --remap "ancien-user=nouveau-user"
+    py scripts/import_claude_sessions.py "<bundle>" --remap "C:\\Users\\Flo\\old=D:\\projets" --force
+    py scripts/import_claude_sessions.py "<bundle>" --projects-dir "<dossier de test>"
 
 Puis sur le PC cible :
     cd "<dossier du projet>"
@@ -54,7 +54,7 @@ PROJECTS_DIR_DEFAULT = Path(os.path.expanduser("~")) / ".claude" / "projects"
 def encode_cwd(cwd: str) -> str:
     """Reproduit l'encodage Claude Code : tout caractere non [a-zA-Z0-9] -> '-'.
     Verifie empiriquement sur ~/.claude/projects (chemins, espaces, worktrees `.claude`).
-    NB : PAS de collapse de sequences (`3- Wisper` -> `3--Wisper`, deux tirets)."""
+    NB : PAS de collapse de sequences (`3- Projets` -> `3--Projets`, deux tirets)."""
     return re.sub(r"[^a-zA-Z0-9]", "-", cwd)
 
 
@@ -110,7 +110,7 @@ def _write_reprise(bundle: Path, by_target: dict, projects_dir: Path, current_us
 
 def import_bundle(bundle, projects_dir=None, remaps=None, auto_user=True,
                   force=False, dry_run=False, write_reprise=True) -> dict:
-    """Reinjecte les .jsonl d'un bundle exporte. Reutilisable (CLI + app SpeakApp).
+    """Reinjecte les .jsonl d'un bundle exporte. Reutilisable (CLI, ou embarque dans une app).
 
     Retourne un summary :
         {found, injected, copied, skip_exists, no_cwd, projects, current_user,
@@ -186,7 +186,7 @@ def main():
     ap.add_argument("--projects-dir", default=str(PROJECTS_DIR_DEFAULT),
                     help="Dossier cible (defaut ~/.claude/projects)")
     ap.add_argument("--remap", action="append", default=[],
-                    help='Remplacement de chemin "ANCIEN=NOUVEAU" (repetable). Ex "Utilisateur=Administrateur"')
+                    help='Remplacement de chemin "ANCIEN=NOUVEAU" (repetable). Ex "ancien-user=nouveau-user"')
     ap.add_argument("--no-auto-user", action="store_true",
                     help="Desactive le remap automatique du nom d'utilisateur (Users/home)")
     ap.add_argument("--force", action="store_true", help="Ecrase une session deja presente")

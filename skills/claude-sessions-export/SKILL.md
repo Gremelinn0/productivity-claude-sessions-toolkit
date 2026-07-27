@@ -1,7 +1,7 @@
 ---
 name: claude-sessions-export
 description: >
-  SORT les sessions Claude Code locales (`~/.claude/projects/*.jsonl`) hors de la machine ou les INVENTORIE — sans compte actif ni tokens. Trois jobs : (1) filet de sauvegarde avant de changer de compte, (2) index Markdown de toutes les sessions, (3) bundle `.zip` pour un AUTRE PC. ⚠️ N'EST PAS le skill pour RETROUVER ou RELANCER une session sur CE PC (même depuis un autre compte) — ça, aucun export n'est requis, c'est **/claude-sessions-import**. N'est pas non plus réservé au PC-à-PC : la migration entre COMPTES se fait sur le MÊME PC (cf § Règle Florent). Pour transport via git (petits dépôts), voir /claude-sessions-sync.
+  SORT les sessions Claude Code locales (`~/.claude/projects/*.jsonl`) hors de la machine ou les INVENTORIE — sans compte actif ni tokens. Trois jobs : (1) filet de sauvegarde avant de changer de compte, (2) index Markdown de toutes les sessions, (3) bundle `.zip` pour un AUTRE PC. ⚠️ N'EST PAS le skill pour RETROUVER ou RELANCER une session sur CE PC (même depuis un autre compte) — ça, aucun export n'est requis, c'est **/claude-sessions-import**. N'est pas non plus réservé au PC-à-PC : la migration entre COMPTES se fait sur le MÊME PC (cf § Règle l'utilisateur). Pour transport via git (petits dépôts), voir /claude-sessions-sync.
   Invoquer pour : sauvegarder avant bascule de compte, transporter vers un autre PC, archiver, ou lister les sessions actives sans wrapup coûteux.
   Triggers : "/claude-sessions-export", "exporter mes sessions", "sauvegarde mes sessions avant de changer de compte", "mes sessions actives", "migration compte Claude", "sauvegarder mes sessions Claude Code", "emmener mes sessions sur l'autre PC", "export sessions JSONL", "sessions en pagaille", "index de toutes mes sessions".
 ---
@@ -10,7 +10,7 @@ description: >
 
 ## 🎯 Objectif (le problème que ça résout)
 
-Florent a des centaines de sessions Claude Code. Les archiver une par une (wrapup / migration / Notion)
+L'utilisateur a des centaines de sessions Claude Code. Les archiver une par une (wrapup / migration / Notion)
 **coûte des tokens** et exige un **abonnement actif**. Or **toutes ses sessions sont déjà en local** :
 
 ```
@@ -83,25 +83,25 @@ qu'on quitte la machine (cas B) ou qu'on risque de perdre le disque.
 > Le principe commun aux trois : **Claude lit la session et reprend le fil.** L'utilisateur ne tape
 > aucune commande, aucun identifiant — il dit où il en est, et on s'occupe du reste.
 
-## 🖥️ Règle Florent — migration entre COMPTES = MÊME PC, jamais de navette USB inter-PC (gravé 2026-07-09)
+## 🖥️ Règle d'usage — migration entre COMPTES = MÊME PC, jamais de navette USB inter-PC (gravé 2026-07-09)
 
-Cas d'usage réel quand Florent **change de compte Claude** (abo résilié → nouveau compte) : il **migre
+Cas d'usage réel quand l'utilisateur **change de compte Claude** (abo résilié → nouveau compte) : il **migre
 ses sessions d'un compte à l'autre TOUJOURS sur le MÊME PC**. Sur un même PC les `.jsonl` sont sur le
 disque, **liés au compte Windows, PAS au compte Claude** → changer de compte = **simple re-login, les
 fichiers restent**. **Rien à transférer.**
 
-**Ne JAMAIS lui imposer un transfert `.zip` par clé USB entre ses 2 PC.** Florent a **accès simultané à
+**Ne JAMAIS lui imposer un transfert `.zip` par clé USB entre ses 2 PC.** L'utilisateur a **accès simultané à
 ses 2 PC en bureau à distance** → il ne branche pas de clé sur un PC distant, il fait le switch de compte
 **localement sur chaque PC**. Pour du léger (un doc, un prompt), la **navette Ctrl+C / Ctrl+V** entre les
 2 bureaux remote suffit — pas de paranoïa, pas d'exports lourds.
 
-**⚠️ TRANCHÉ (vécu Florent 2026-07-09) : changer de compte Claude = tu ne REVOIS pas tes sessions.**
+**⚠️ TRANCHÉ (vécu réel 2026-07-09) : changer de compte Claude = tu ne REVOIS pas tes sessions.**
 La sidebar Claude Desktop se recharge **PAR COMPTE** → le nouveau compte affiche une sidebar **VIDE** des
 anciennes sessions. **NE JAMAIS dire « ça s'affichera après login » : c'est faux, la sidebar sort vide.**
 
 > 🔧 **AFFICHAGE ≠ RETROUVABILITÉ — correction du 2026-07-25 (ce bloc sur-promettait).** L'ancienne
 > rédaction disait « tu NE retrouves PAS tes sessions » et « le protocole export/revive **n'est PAS
-> optionnel** ». **Faux, prouvé live** : Florent a nommé une session ouverte sur un **autre compte**,
+> optionnel** ». **Faux, prouvé live** : l'utilisateur a nommé une session ouverte sur un **autre compte**,
 > **aucun export n'avait été fait**, et elle est ressortie en quelques secondes → chip → contexte
 > complet rechargé. **Ce qui est vide, c'est la VUE ; le disque, lui, garde tout** — et le **store
 > `local_*.json` est PARTAGÉ entre comptes** (la session de l'autre compte y était ; `list_sessions`,
@@ -123,43 +123,43 @@ anciennes sessions. **NE JAMAIS dire « ça s'affichera après login » : c'est 
 4. **Clé USB / transfert inter-PC = seulement PC↔PC réellement séparés**, jamais pour un changement de
    compte sur la même machine (là tout est déjà sur le disque).
 
-## 🧹 Ménage à CHAQUE export — REMPLACER l'ancien, jamais toucher au reste (règle Florent 2026-06-22)
+## 🧹 Ménage à CHAQUE export — REMPLACER l'ancien, jamais toucher au reste (règle d'usage gravée 2026-06-22)
 
 À chaque export vers une **destination de transfert** (clé USB, dossier de migration) : faire le ménage
 **dans la même passe**. On ne garde qu'**UN** export courant à cet endroit, pas une pile d'anciens.
 
 1. **Lister la destination AVANT** d'écrire/supprimer (inventaire).
 2. **Copier** le nouveau zip + le **renommer avec le préfixe `migration-` OBLIGATOIRE** :
-   `migration-<scope>_<date>.zip` (ex `migration-speak-app-dev_2026-06-22.zip`).
-   ⚠️ **Sans `migration-` en tête, Florent NE retrouve PAS ses migrations** — tout export/migration de
+   `migration-<scope>_<date>.zip` (ex `migration-mon-projet_2026-06-22.zip`).
+   ⚠️ **Sans `migration-` en tête, l'utilisateur NE retrouve PAS ses migrations** — tout export/migration de
    sessions DOIT commencer par `migration-` (verbatim 2026-06-22, NON négociable).
 3. **Supprimer UNIQUEMENT l'ancien export** : les artefacts produits par CE skill —
-   `migration-*.zip`, `speak-app-dev_*.zip`, `speakapp-sessions*.zip`, `REPRISE*.md`, `INDEX-SIDEBAR.md`, `LISEZ-MOI.md`.
+   `migration-*.zip`, `mon-projet_*.zip`, `claude-sessions*.zip`, `REPRISE*.md`, `INDEX-SIDEBAR.md`, `LISEZ-MOI.md`.
    Delete **fichier-par-fichier** (`[System.IO.File]::Delete`), **jamais** `-Recurse`.
 
 > 🛑 **Garde-fou NON négociable** : ne JAMAIS toucher aux autres fichiers/dossiers de la destination.
-> La clé USB de Florent contient des dossiers persos (ex : 2 dossiers de films Torrent911) — **intouchables**.
+> La destination contient très probablement des dossiers personnels sans rapport — **intouchables**.
 > On supprime le SEUL ancien export identifié par son nom, rien d'autre. C'est une autorisation explicite
 > de suppression **strictement limitée aux artefacts de ce skill** (ça lève le défaut archive-first §11
-> global UNIQUEMENT pour ce cas précis, sur verbatim Florent).
+> global UNIQUEMENT pour ce cas précis, sur demande explicite de l'utilisateur).
 
-Verbatim Florent 2026-06-22 : *« nettoie bien l'ancien fichier sans supprimer les bons fichiers, juste
-l'ancien export, on renomme bien le nouvel export… il faut faire le ménage à chaque fois… j'ai deux
-dossiers de films, n'y touche pas. »*
+Formulé par l'utilisateur à l'origine de la règle : *« nettoie bien l'ancien fichier sans supprimer les
+bons fichiers, juste l'ancien export, on renomme bien le nouvel export… il faut faire le ménage à chaque
+fois… j'ai d'autres dossiers là-dedans, n'y touche pas. »*
 
 ## ⚡ Recettes (commandes prêtes)
 
 ```powershell
-# 0) ⭐⭐ MIGRATION SIMPLE (PC→PC, l'usage de Florent) : UN seul .zip, dans les TÉLÉCHARGEMENTS.
+# 0) ⭐⭐ MIGRATION SIMPLE (PC→PC, l'usage courant) : UN seul .zip, dans les TÉLÉCHARGEMENTS.
 #    Toujours au même endroit, facile à retrouver. Le script imprime le chemin exact.
-py scripts/export_claude_sessions.py --sidebar --flat --zip --out "$env:USERPROFILE\Downloads\speakapp-sessions"
-#    -> %USERPROFILE%\Downloads\speakapp-sessions.zip   (réinjection sur l'autre PC : /claude-sessions-import)
+py scripts/export_claude_sessions.py --sidebar --flat --zip --out "$env:USERPROFILE\Downloads\claude-sessions"
+#    -> %USERPROFILE%\Downloads\claude-sessions.zip   (réinjection sur l'autre PC : /claude-sessions-import)
 
 # 1) ⭐ SIDEBAR (mode recommandé) : RANGEMENT AUTO + .zip propre PAR DÉFAUT.
 #    Sort UN dossier par export :  <out>/<année>/<projet>/<date_nom>/<projet>_<date>.zip
 #    (le .zip contient jsonl/ bruts + md/ lisibles + INDEX-SIDEBAR.md + REPRISE.md ; bundle temp auto-nettoyé)
-py scripts/export_claude_sessions.py --sidebar --out "C:\Users\Utilisateur\PROJECTS\3- Wisper\Migration compte Claude"
-py scripts/export_claude_sessions.py --sidebar --project speak-app-dev --out "<dossier>"      # 1 SEUL dépôt (dossier = son nom)
+py scripts/export_claude_sessions.py --sidebar --out "$env:USERPROFILE\Documents\Migration compte Claude"
+py scripts/export_claude_sessions.py --sidebar --project mon-projet --out "<dossier>"      # 1 SEUL dépôt (dossier = son nom)
 py scripts/export_claude_sessions.py --sidebar --export-name sidebar-active --out "<dossier>" # suffixe lisible du dossier d'export
 py scripts/export_claude_sessions.py --sidebar --dry-run                                      # voir la liste sans rien écrire
 py scripts/export_claude_sessions.py --sidebar --include-archived --out "<dossier>"           # inclure les archivées
@@ -183,7 +183,7 @@ py scripts/export_claude_sessions.py
 py scripts/export_claude_sessions.py --active --days 10 --per-project 15 --out "<dossier>"
 
 # 4) Export complet LISIBLE d'un projet (relire sans Claude Code)
-py scripts/export_claude_sessions.py --full --project speak-app-dev
+py scripts/export_claude_sessions.py --full --project mon-projet
 ```
 
 ### Le mode `--sidebar` (la source de vérité)
@@ -198,7 +198,7 @@ Résultat = ta sidebar au mot près, pas une approximation par récence.
 > (ex : Claude Code dans le harness, qui voit `~/.claude` mais pas `~/AppData`), passer par un manifest :
 > PowerShell extrait le store → JSON, puis `py ... --sidebar --manifest tools/.sidebar-manifest.json`.
 > Le snippet PowerShell d'extraction est dans la section « Pont manifest » plus bas. En usage normal
-> (Florent dans son propre terminal), `--sidebar` seul suffit, pas besoin de manifest.
+> (dans ton propre terminal), `--sidebar` seul suffit, pas besoin de manifest.
 
 > ⚠️ **Piège `py` → Python Store** (vu le 2026-06-02) : si `--sidebar` répond « Store introuvable »
 > alors que Claude Desktop EST installé, c'est souvent que le lanceur `py` a résolu le shebang vers un
@@ -216,7 +216,7 @@ Résultat = ta sidebar au mot près, pas une approximation par récence.
 
 ```
 <dossier de sortie>/
-  <année>/<projet>/<date>_<nom>/<projet>_<date>.zip      ex: 2026/speak-app-dev/2026-06-20_1754_sidebar-active/speak-app-dev_2026-06-20_1754.zip
+  <année>/<projet>/<date>_<nom>/<projet>_<date>.zip      ex: 2026/mon-projet/2026-06-20_1754_sidebar-active/mon-projet_2026-06-20_1754.zip
 ```
 
 Le `.zip` contient le bundle complet (le `--export-name` ajoute le suffixe `_<nom>` au dossier daté) :
@@ -225,7 +225,7 @@ Le `.zip` contient le bundle complet (le `--export-name` ajoute le suffixe `_<no
   INDEX-SIDEBAR.md        récap (par projet) = ta sidebar
   REPRISE.md              comment relancer chaque session (commandes prêtes)
   jsonl/<projet>/<id>.jsonl    copies brutes (pour reprendre / cross-PC)
-  md/<projet>/<date>_<titre>_<id8>.md   versions lisibles, titre = titre sidebar (Florent ↔ Claude)
+  md/<projet>/<date>_<titre>_<id8>.md   versions lisibles, titre = titre sidebar (Utilisateur ↔ Claude)
 ```
 
 **Avec `--flat`** — ancien comportement : `INDEX-SIDEBAR.md` + `REPRISE.md` + `jsonl/` + `md/` écrits
@@ -237,7 +237,7 @@ déjà peuplé (il zipperait le contenu voisin).
 Une session se reprend **en local, sans dépendre du compte** :
 
 ```powershell
-cd "<dossier du projet>"          # ex: cd "C:\Users\Utilisateur\PROJECTS\3- Wisper\speak-app-dev"
+cd "<dossier du projet>"          # ex: cd "C:\Users\<toi>\Projets\mon-projet"
 claude --resume <sessionCLI>
 ```
 
@@ -300,15 +300,15 @@ py scripts/export_claude_sessions.py --sidebar --manifest "tools\.sidebar-manife
 
 ## 🔍 Multi-comptes — TRANCHÉ côté vécu (le comportement pratique)
 
-> ✅ **TRANCHÉ (Florent, vécu 2026-07-09) : changer de compte = sidebar VIDE, sessions PAS retrouvées.**
+> ✅ **TRANCHÉ (vécu réel 2026-07-09) : changer de compte = sidebar VIDE, sessions PAS retrouvées.**
 > En pratique c'est le comportement de l'hypothèse **(b)** : sous un autre compte on **ne revoit pas** ses
 > sessions → le protocole **export-avant / revive-après est OBLIGATOIRE** (cf § Règle migration ci-dessus).
 > Le détail technique ci-dessous (fichiers locaux, empreinte de store) reste à confirmer, mais **ne change
 > RIEN à la conduite : on ne compte JAMAIS sur l'affichage auto après un changement de compte.**
 
-> ⚠️ **Question ouverte non tranchée.** Florent a **3 comptes Claude**. Quand il est sur le compte F,
-> sa sidebar wisper-app (mode Code) affiche ~15 sessions, mais l'export `--sidebar` en sort beaucoup
-> plus (ex 48 non-archivées speak-app-dev). **Deux explications possibles, pas encore départagées :**
+> ⚠️ **Question ouverte non tranchée.** Avec plusieurs comptes Claude sur la même machine : la sidebar
+> d'un projet (mode Code) peut afficher ~15 sessions alors que l'export `--sidebar` en sort beaucoup
+> plus (ex 48 non-archivées sur un seul dépôt). **Deux explications possibles, pas encore départagées :**
 > (a) les sessions « en trop » sont juste **plus anciennes** (hors de la vue du haut de sa sidebar),
 > (b) elles viennent de **ses autres comptes** (le store local mélangerait les comptes).
 
@@ -336,8 +336,8 @@ py scripts/export_claude_sessions.py --sidebar --manifest "tools\.sidebar-manife
 **Protocole de vérification (à dérouler à la prochaine session depuis un autre compte) :**
 
 ```powershell
-# 1) Sur le compte ACTUEL (déjà fait pour F -> empreinte c38d05acefd1, voir account-snapshots/)
-py scripts/export_claude_sessions.py --status --label "compte-F-pro" --out "<dossier>"
+# 1) Sur le compte ACTUEL (produit une empreinte dans account-snapshots/)
+py scripts/export_claude_sessions.py --status --label "compte-1" --out "<dossier>"
 # 2) Se déconnecter, se reconnecter sur un AUTRE compte Claude dans Claude Desktop, puis :
 py scripts/export_claude_sessions.py --status --label "compte-2" --out "<dossier>"
 # 3) Comparer les EMPREINTES (champ fingerprint des 2 JSON dans account-snapshots/) :
@@ -347,44 +347,8 @@ py scripts/export_claude_sessions.py --status --label "compte-2" --out "<dossier
 #                         => chaque compte a ses sessions (explication b), et --sidebar par compte = correct.
 ```
 
-Référence déjà capturée : `account-snapshots/2026-06-07_*_compte-F-pro.json` (empreinte `c38d05acefd1`).
-Au prochain run depuis un autre compte → refaire `--status`, comparer, et **trancher (a) ou (b)** ici.
-
-## ✅ Bouton SaaS dans l'app — LIVRÉ 2026-06-20
-
-**Réglages > Confidentialité > « Transférer mes sessions »** = 2 boutons :
-- **Exporter mes sessions** → `.zip` des sessions Claude Code actives (sidebar non-archivée), à copier sur un autre PC.
-- **Importer des sessions** → réinjecte un `.zip` (remap auto du username, dépôt au bon endroit) pour `claude --resume`.
-
-**Câblage** (mirror de la plomberie file-picker dormante DS-CONV-004) :
-- UI : `settings_ui/index.html` § « Transférer mes sessions » + JS `exportSessionsZip()` / `importSessionsZip()`.
-- IPC : `settings_webview.py` `SettingsAPI.export_sessions_zip()` / `import_sessions_zip()` (dialogs tkinter `.zip`).
-- Bridge embedded-CC : `interface/subprocess.py` `SettingsAPIServer.export_sessions_zip` / `import_sessions_zip`.
-- Briques réutilisées (zéro réécriture) : `export_sidebar()` (export) + `import_bundle()` (import) des 2 scripts `tools/`.
-
-> ⚠️ **Distinct de DS-CONV-004** (qui a retiré l'export du **TEXTE** des conversations) : ici c'est l'export/import des **vraies sessions Claude Code** (`.jsonl`, reprise native). Go explicite Florent 2026-06-20.
-> 🧪 **À valider live** : le clic des 2 boutons dans l'app + le `claude --resume` final sur un 2ᵉ PC (le round-trip zip via les briques est prouvé en test).
-
-### 🔮 Historique de la vision (contexte)
-
-Objectif Florent : un bouton dans l'app qui exporte ses sessions, car **l'app connaît déjà
-exactement les sessions suivies** (le watchdog / Control Center = sa sidebar). C'était l'aboutissement
-naturel et **c'était déjà fait à ~80%** :
-
-- **Déjà livré** : le CC a les boutons `📋 Copier TXT` / `💾 Exporter TXT` par carte de session
-  (ticket `bp181-cc-conv-txt-export`, clôturé 2026-06-01) → marche pour **AntiGravity + Chrome + CLI**.
-- **Seul gap = Claude Desktop** (`oui mais pas sur CD`, backlog V1.1.1bis). Raison historique : lire une
-  conv CD = scraper l'écran (vol de focus, DevTools banni).
-- **Le blocage a sauté** : l'app lit déjà le contenu des sessions CD (mode Code) **dans leur JSONL,
-  par nom, sans toucher l'écran** (= ce que fait la Lecture Globale CD, BP-714/717/726, window-agnostic).
-- **Donc l'archi du fix** : router `get_conversation_txt(name)` pour une session CD vers la **source
-  JSONL-by-name** (au lieu du scrape banni) → finit le gap CD de `bp181`. Le ticket prévoyait noir sur
-  blanc la réouverture *« si Florent demande l'export CD »* → condition remplie.
-- **Bouton « tout exporter »** = couche au-dessus : boucler sur les sessions suivies du CC + appeler
-  `get_conversation_txt` pour chacune. La logique JSONL → texte de ce script (`parse_session_full`,
-  `write_session_md`) est **réutilisable comme brique** (CLAUDE.md §3.4 « Brique reuse first »).
-
-✅ **Tranché + livré 2026-06-20** (go Florent : *« on opte pour la solution la plus simple… idéalement sur une fonctionnalité du SaaS »*). Le bouton est dans les Réglages (cf section « Bouton SaaS dans l'app » ci-dessus). Le script CLI reste utile pour les transferts en masse / scriptés.
+Chaque `--status` dépose son empreinte dans `account-snapshots/`. Au prochain run depuis un autre compte
+→ refaire `--status`, comparer les deux empreintes, et **trancher (a) ou (b)**.
 
 ## 🔧 Paramètres du script
 
@@ -413,9 +377,4 @@ naturel et **c'était déjà fait à ~80%** :
 
 - Script export : `scripts/export_claude_sessions.py`
 - Script import / réinjection : `scripts/import_claude_sessions.py` (testé : remap, dédoublonnage, `--force`, auto-user, encodage worktree)
-- Vision app / export TXT CC : `memory/features/control-center.md` § ticket `bp181-cc-conv-txt-export`
-  (+ DS conditions de réouverture export CD)
-- Lecture JSONL des sessions CD (la source qui débloque CD) : `memory/features/chat-reader.md`
-  § DS-2026-05-29-LG-CD-JSONL-WINDOW-AGNOSTIC (BP-714/717/726)
-- Migration d'UNE session avec handoff (différent — c'est pour passer le relais, pas exporter en masse) :
-  skills `/wrapup-migration` + `/migration-pickup` + `/switch-session`
+- Retrouver / relancer une session sur CE PC (aucun export requis) : `/claude-sessions-import`

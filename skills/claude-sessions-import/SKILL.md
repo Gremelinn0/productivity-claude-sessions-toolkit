@@ -80,7 +80,7 @@ qu'on quitte la machine (cas B) ou qu'on risque de perdre le disque.
 > 3. **Si la session existe DÉJÀ / est vivante** (visible dans la sidebar, trackée) → on **POSTE le message DEDANS** (`send_message` via `/sessions`), on ne la rouvre pas, on ne la re-crée pas. On ne spawne un chip **que** pour une session qui n'a **pas** déjà sa fenêtre vivante.
 > 4. **ZÉRO LECTURE DE CONTENU ICI.** Relancer = un lookup MÉCANIQUE `titre → chemin .jsonl` (dict local, quelques lignes), puis `spawn_task`. Point. **Jamais** de `parse_session`/dump de métadonnées (nb messages, dates, aperçu du 1er message) ni de lecture du transcript **dans cette session orchestratrice** — ni pour "vérifier", ni pour "un meilleur titre" (le titre vient déjà de la sidebar). Le contenu se lit **UNE SEULE FOIS**, DANS le chip, à son ouverture. Le relire ici = payer deux fois la même lecture pour zéro décision utile.
 >
-> *(Jurisprudence 2026-07-10 : forks en masse sur le même PC = doublons inutiles = à ne jamais refaire. « Une session = une session. » — Jurisprudence 2026-07-15 : dump `parse_session` (métadonnées) d'une session déjà résolue, juste avant de spawner son chip = gaspillage pur. Florent : « 2K token pr relancer une session mdr c une blague ? ». Dès que titre+cwd+chemin `.jsonl` sont connus → spawn IMMÉDIAT, zéro étape de plus.)*
+> *(Jurisprudence 2026-07-10 : forks en masse sur le même PC = doublons inutiles = à ne jamais refaire. « Une session = une session. » — Jurisprudence 2026-07-15 : dump `parse_session` (métadonnées) d'une session déjà résolue, juste avant de spawner son chip = gaspillage pur. L'utilisateur : « 2K token pr relancer une session mdr c une blague ? ». Dès que titre+cwd+chemin `.jsonl` sont connus → spawn IMMÉDIAT, zéro étape de plus.)*
 
 > 🖐️ **LE « 5 PAR 5 » EST UN RAPPEL VÉNÈRE À SERVIR À L'USER — PAS UN RATIONNEMENT DE MES SPAWNS (gravé 2026-07-16).**
 > **Moi** : je spawn **TOUTES** les sessions de la liste, d'un coup, tour unique. Mon job de lancement est fini là.
@@ -89,7 +89,7 @@ qu'on quitte la machine (cas B) ou qu'on risque de perdre le disque.
 > - ⚠️ **« Si une session n'a pas démarré, ou est repartie à vide → relance CE chip-là, lui seul. »** (repère de panne : 1er message ≠ « Reprends la session … » ⇒ ratée, cf ⏳ ci-dessous.)
 > - ⛔ **INTERDIT de rationner MES spawns « pour aider »** — c'est exactement ce qui a produit l'oubli : je m'auto-limitais à 5, je ne revenais jamais finir, et des sessions restaient au tapis **en silence**. Un chip en trop se dismisse d'un clic ; une session jamais lancée, personne ne la voit.
 >
-> *(Jurisprudence 2026-07-16 : rationnement 5-par-5 côté Claude → 5/12 lancées, puis 12/13 (Pricing oubliée). Florent : « ça a déjà marché très bien… toi tu oublies complètement de te réactiver, donc on enlève ça, et on met juste un rappel bien vénère à l'utilisateur de les valider 5 par 5… tu as oublié la moitié des sessions, frérot, je n'ai pas que ça à branler. »)*
+> *(Jurisprudence 2026-07-16 : rationnement 5-par-5 côté Claude → 5/12 lancées, puis 12/13 (Pricing oubliée). L'utilisateur : « ça a déjà marché très bien… toi tu oublies complètement de te réactiver, donc on enlève ça, et on met juste un rappel bien vénère à l'utilisateur de les valider 5 par 5… tu as oublié la moitié des sessions, frérot, je n'ai pas que ça à branler. »)*
 
 > ⏳ **NE LANCE PAS LA SESSION TROP VITE — sinon elle est PERDUE.** Quand tu cliques un chip / rouvres une session importée, le **tout 1er message en haut de la session** doit être **« Reprends la session « &lt;titre&gt; » … »** — c'est LUI qui recharge tout le contexte (lecture du `.jsonl`). **Laisse l'IA finir de charger** : elle répond **« ✅ contexte chargé »** + un résumé **avant** que tu écrives.
 >
@@ -97,7 +97,7 @@ qu'on quitte la machine (cas B) ou qu'on risque de perdre le disque.
 
 ## 📸 MÉTHODE CAPTURE D'ÉCRAN — même PC, changement de compte (la plus simple, 0 crédit)
 
-> 🔑 **Le cas normal, dit clairement** : ces sessions étaient TOUTES ouvertes sur un **AUTRE compte Claude**, sur CE MÊME PC (compte A vidé → tu passes sur B). Elles ne sont PAS liées au compte Claude mais à ta session **Windows** → le nouveau compte les retrouve toutes en local. La capture sert juste à dire **lesquelles** relancer ; le travail (retrouver + rouvrir via chips) se fait sur le **compte cible** (celui qui a des crédits). C'est exactement ce que Florent fait quand il change de compte.
+> 🔑 **Le cas normal, dit clairement** : ces sessions étaient TOUTES ouvertes sur un **AUTRE compte Claude**, sur CE MÊME PC (compte A vidé → tu passes sur B). Elles ne sont PAS liées au compte Claude mais à ta session **Windows** → le nouveau compte les retrouve toutes en local. La capture sert juste à dire **lesquelles** relancer ; le travail (retrouver + rouvrir via chips) se fait sur le **compte cible** (celui qui a des crédits). C'est exactement ce que l'utilisateur fait quand il change de compte.
 >
 > ↔️ **Symétrie export → import (à dire à l'utilisateur)** : si quelqu'un **exporte** ses sessions via `/claude-sessions-export`, on le prévient que **l'import se fait depuis son AUTRE compte Claude** via `/claude-sessions-import` — jamais sur le compte qu'il quitte (celui-là n'a plus de crédits, c'est justement la raison du transfert).
 
@@ -111,7 +111,7 @@ qu'on quitte la machine (cas B) ou qu'on risque de perdre le disque.
 **🤖 Côté Claude (ce que JE fais sur le compte cible)** :
 1. **Lire les titres** de sessions dans la capture (vision).
    - ⚠️ **JAMAIS présumer qu'une ligne est un INTERTITRE** parce qu'elle est en MAJUSCULES / sans emoji : un **titre de session** peut y ressembler à s'y méprendre. Une ligne n'est un intertitre **que si AUCUNE session du store ne porte ce titre** — ça se **vérifie** à l'étape 2, ça ne se devine pas à l'œil. En cas de doute → on la traite comme une session (un chip en trop se dismisse ; une session oubliée, personne ne la voit).
-   - *(Jurisprudence 2026-07-16 : `PRICING - PAUSE` classée « intertitre » par ressemblance avec `MARKETING` juste au-dessus — qui, lui, en était vraiment un. Résultat : session oubliée, 12 lancées sur 13. Florent : « Tu as oublié la session PRicing, voilà. » Le contrôle coûte un grep ; l'oubli est silencieux.)*
+   - *(Jurisprudence 2026-07-16 : `PRICING - PAUSE` classée « intertitre » par ressemblance avec `MARKETING` juste au-dessus — qui, lui, en était vraiment un. Résultat : session oubliée, 12 lancées sur 13. L'utilisateur : « Tu as oublié la session PRicing, voilà. » Le contrôle coûte un grep ; l'oubli est silencieux.)*
 2. **Les retrouver en local** (même utilisateur Windows → mêmes fichiers) — **UNE commande, celle-ci** :
    ```powershell
    py -3.12 scripts/export_claude_sessions.py --sidebar --dry-run   # titre EXACT -> cliSessionId -> cwd
@@ -145,8 +145,8 @@ connecté. Claude Code range chaque session ici :
 ```
 
 où `<cwd-encodé>` = le chemin de travail avec **chaque caractère non-alphanumérique remplacé
-par `-`** (vérifié : `C:\Users\Utilisateur\PROJECTS\3- Wisper\speak-app-dev` →
-`C--Users-Utilisateur-PROJECTS-3--Wisper-speak-app-dev`). **Le piège** : le nom d'utilisateur
+par `-`** (vérifié : `C:\Users\alice\Projets\mon-projet` →
+`C--Users-alice-Projets-mon-projet`). **Le piège** : le nom d'utilisateur
 change souvent d'un PC à l'autre → le dossier encodé change → une copie naïve atterrit au
 mauvais endroit et `claude --resume` ne retrouve rien. Ce skill lit le `cwd` d'origine **dans
 chaque .jsonl**, le **remappe**, l'encode, et dépose le fichier au bon endroit.
@@ -154,9 +154,9 @@ chaque .jsonl**, le **remappe**, l'encode, et dépose le fichier au bon endroit.
 Outil : [`scripts/import_claude_sessions.py`](../../../scripts/import_claude_sessions.py) (fonction
 `import_bundle()` réutilisable — aussi câblée au bouton Réglages « Transférer mes sessions »).
 
-> 🔑 **Transport par clé USB (cas Florent migration de compte/PC).** L'export `/claude-sessions-export`
+> 🔑 **Transport par clé USB (cas migration de compte/PC).** L'export `/claude-sessions-export`
 > sort un `.zip` (rangé `<année>/<projet>/<date>/<projet>_<date>.zip`) → copié sur la clé. Sur l'AUTRE PC,
-> Florent dit simplement **« récupère les sessions »** / **« importe la dernière migration »** et Claude
+> l'utilisateur dit simplement **« récupère les sessions »** / **« importe la dernière migration »** et Claude
 > **trouve le `.zip` tout seul sur la clé** (la lettre du lecteur change d'un PC à l'autre — NE PAS présumer `D:`).
 > Mode B par défaut : Claude lit le zip et reprend le fil (rien à réinjecter). Aucun token, aucun réseau, aucun compte requis.
 
@@ -166,13 +166,13 @@ Outil : [`scripts/import_claude_sessions.py`](../../../scripts/import_claude_ses
 $sys = $env:SystemDrive   # lecteur systeme (C:) a exclure du scan
 Get-CimInstance Win32_LogicalDisk | Where-Object { $_.DeviceID -ne $sys -and $_.DriveType -in 2,3 } | ForEach-Object {
   Get-ChildItem ($_.DeviceID + "\") -Recurse -Depth 2 -Filter "*.zip" -ErrorAction SilentlyContinue |
-    Where-Object { $_.Name -match 'sessions|speak-app-dev|sidebar|migration' }
+    Where-Object { $_.Name -match 'sessions|mon-projet|sidebar|migration' }
 } | Sort-Object LastWriteTime -Descending | Select-Object -First 1 -ExpandProperty FullName
 ```
 → Claude prend le **plus récent** et le passe à `read_claude_session.py` (Mode B, lecture+reprise) ou
 `import_claude_sessions.py` (réinjection). Une clé USB peut apparaître en `DriveType=2` (amovible) **ou** `3`
 (fixe, selon le contrôleur) → on scanne les deux, hors lecteur système. Rien trouvé (clé pas branchée /
-éjectée) → demander le chemin à Florent. Vérifié 2026-06-20 : retourne vide quand la clé est éjectée (OK).
+éjectée) → demander le chemin à l'utilisateur. Vérifié 2026-06-20 : retourne vide quand la clé est éjectée (OK).
 
 ## 🅱️ Mode B — Claude LIT le fichier et reprend (mode ACTUEL, « pour commencer »)
 
@@ -180,7 +180,7 @@ Le `.zip` contient les conversations **en clair** → **pas besoin de réinjecte
 Claude lit la session et **continue le travail** avec tout le contexte. Le plus simple, dispo tout
 de suite, ne touche à rien sur le PC. C'est « le boulot de Claude ».
 
-Sur l'autre PC, Florent dit *« reprends la session X (du zip) »* → Claude exécute :
+Sur l'autre PC, l'utilisateur dit *« reprends la session X (du zip) »* → Claude exécute :
 
 ```powershell
 py scripts/read_claude_session.py "<chemin>\sessions-export.zip"               # liste (TES titres sidebar)
@@ -196,12 +196,12 @@ local direct** (le chemin canonique du chip Mode B « capture d'écran » — m�
 
 ## 🎰 Relancer EN SÉRIE via CHIPS (autonome — le mode pour plusieurs sessions)
 
-Quand Florent veut relancer PLUSIEURS sessions (« relance mes sessions du zip », « les épinglées »,
-ou il en nomme) : Claude **spawne un chip par session** → Florent **clique**, il ne tape rien, et
-la session repart avec **tout son contexte**. C'est le « balance toutes les chips » de Florent.
+Quand l'utilisateur veut relancer PLUSIEURS sessions (« relance mes sessions du zip », « les épinglées »,
+ou il en nomme) : Claude **spawne un chip par session** → l'utilisateur **clique**, il ne tape rien, et
+la session repart avec **tout son contexte**. C'est le « balance toutes les chips » de l'utilisateur.
 
 > 🖐️ **On spawn TOUT d'un coup** (aucun rationnement côté Claude — cf ⛔ Règle d'or point 1), et **on
-> termine la réponse par le RAPPEL VÉNÈRE à Florent : « clique-les 5 PAR 5 max, attends le `✅ contexte
+> termine la réponse par le RAPPEL VÉNÈRE à L'utilisateur : « clique-les 5 PAR 5 max, attends le `✅ contexte
 > chargé` du paquet avant les 5 suivants ; une session pas partie → relance CE chip-là »**. Et **une
 > session vivante ne se re-spawne pas** : si elle est déjà ouverte/trackée → **`send_message` dedans**
 > (via `/sessions`), pas un nouveau chip. Un chip = **une session propre**, jamais un fork/doublon.
@@ -216,7 +216,7 @@ Procédure (Claude exécute) :
      suffisent au `spawn_task`), ça ne fait que payer une lecture pour rien (cf ⛔ Règle d'or point 4).
      Dès que titre+cwd+id sont connus pour une session → étape 2 direct, pas de détour.
 2. Pour CHAQUE session retenue → `spawn_task` :
-   - **title** = le **nom d'origine** (titre sidebar) — Florent y tient.
+   - **title** = le **nom d'origine** (titre sidebar) — l'utilisateur y tient.
    - **cwd** = le **dossier du projet** de la session (§14 : rooté au bon endroit, sinon le travail
      reprend au mauvais endroit ; omis si = dépôt courant).
    - **prompt** (Mode B, self-contained §23.1). ⚠️ **Sa 1re ligne = le repère que l'user DOIT voir en haut
@@ -226,7 +226,7 @@ Procédure (Claude exécute) :
      3 lignes → reprends le fil → attends instructions. **Chemins ABSOLUS** (le chip tourne dans un autre
      cwd / worktree). Si l'user voit `go`/un autre texte à la place de cette 1re ligne = 1er message coupé →
      import raté, à relancer.
-3. Florent clique → session relancée, contexte préservé, chip consommé (sort de la liste).
+3. l'utilisateur clique → session relancée, contexte préservé, chip consommé (sort de la liste).
 
 > Chaque chip = sa session (worktree isolé) → relance de plusieurs en parallèle.
 > Jurisprudence : 10 chips épinglés spawnés le 2026-06-20 (test live, rootés par projet).
@@ -288,7 +288,7 @@ sidebar n'est PAS pilotée par les `.jsonl` mais par un store séparé
 copier le `.jsonl`, **recréer l'entrée `local_*.json`** (sessionId + cliSessionId + cwd remappé +
 titre) — l'export capture déjà ces métadonnées (manifest sidebar). ⚠️ écrit dans le store de CD
 pendant qu'il tourne → à tester live + probable redémarrage de CD pour rafraîchir la liste.
-**Décision Florent 2026-06-20 : on fait Mode B d'abord, Mode A ensuite.**
+**Décision tranchée 2026-06-20 : on fait Mode B d'abord, Mode A ensuite.**
 
 ## ✅ Validé
 
@@ -298,7 +298,7 @@ titre/id. Côté copie : import sur le `.zip` → 117 mappées vers les bons dos
 🧪 Reste à confirmer sur un **2e PC réel** : Claude reprend bien le fil depuis le transcript lu
 (Mode B) ; et plus tard le pop natif (Mode A).
 
-**Cross-comptes, même PC — PROUVÉ live 2026-07-25.** Florent nomme une session ouverte sur un
+**Cross-comptes, même PC — PROUVÉ live 2026-07-25.** l'utilisateur nomme une session ouverte sur un
 **autre compte** (« la session quotas »), sans capture, sans export préalable : `--sidebar` (avec
 `py -3.12`) la sort du store en quelques secondes → chip Mode B sur son `.jsonl` local. **Aucun
 export n'avait été fait au préalable et ça marche quand même** — la nuance du § Multi-comptes de
@@ -312,4 +312,4 @@ pour la **retrouvabilité** : le disque garde tout, le store aussi.
 - Script : `scripts/import_claude_sessions.py` (`import_bundle()`)
 - Bouton équivalent dans l'app : Réglages › Confidentialité › « Transférer mes sessions »
   (skill `/claude-sessions-export` § « Bouton SaaS dans l'app »)
-- Encodage `cwd` + doctrine : `/claude-sessions-export` (§ Réinjecter / À NE PAS CONFONDRE DS-CONV-004)
+- Encodage `cwd` + doctrine : `/claude-sessions-export` (§ Réinjecter)

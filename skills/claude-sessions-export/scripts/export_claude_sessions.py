@@ -15,11 +15,11 @@ INDEPENDAMMENT du compte Claude connecte. Ce script les scanne et produit :
 Aucun appel reseau, aucun token Claude consomme : c'est de la lecture de fichiers locaux.
 
 Usage :
-    py tools/export_claude_sessions.py                  # index seul (toutes vraies sessions)
-    py tools/export_claude_sessions.py --full           # index + export MD complet de chaque session
-    py tools/export_claude_sessions.py --full --project speak-app-dev   # full mais 1 projet cible
-    py tools/export_claude_sessions.py --include-subagents              # inclut aussi les 736 subagents
-    py tools/export_claude_sessions.py --out "D:\\backup\\sessions"     # dossier de sortie custom
+    py scripts/export_claude_sessions.py                  # index seul (toutes vraies sessions)
+    py scripts/export_claude_sessions.py --full           # index + export MD complet de chaque session
+    py scripts/export_claude_sessions.py --full --project mon-projet   # full mais 1 projet cible
+    py scripts/export_claude_sessions.py --include-subagents              # inclut aussi les 736 subagents
+    py scripts/export_claude_sessions.py --out "D:\\backup\\sessions"     # dossier de sortie custom
 """
 
 from __future__ import annotations
@@ -37,7 +37,7 @@ from pathlib import Path
 PROJECTS_DIR = Path(os.path.expanduser("~")) / ".claude" / "projects"
 DEFAULT_OUT = Path(os.path.expanduser("~")) / ".claude" / "sessions-export"
 
-# Dossiers qui ne sont PAS de vraies sessions de travail Florent
+# Dossiers qui ne sont PAS de vraies sessions de travail
 INTERNAL_DIR_PREFIXES = ("subagents", "wf_")
 
 
@@ -266,7 +266,7 @@ def write_session_md(s: dict, rows: list, folder: Path) -> Path:
           f"- Reprendre : `claude --resume {s['session_id']}` (depuis `{label}`)",
           "", "---", ""]
     for role, text, ts in rows:
-        who = "🧑 **Florent**" if role == "user" else "🤖 **Claude**"
+        who = "🧑 **Utilisateur**" if role == "user" else "🤖 **Claude**"
         md.append(f"### {who}  _{fmt_date(ts)}_")
         md.append("")
         md.append(text)
@@ -868,7 +868,7 @@ def main():
                   f"- Messages : {s['n_user']} user / {s['n_assistant']} assistant",
                   f"- Source : `{s['path']}`", "", "---", ""]
             for role, text, ts in rows:
-                who = "🧑 **Florent**" if role == "user" else "🤖 **Claude**"
+                who = "🧑 **Utilisateur**" if role == "user" else "🤖 **Claude**"
                 md.append(f"### {who}  _{fmt_date(ts)}_")
                 md.append("")
                 md.append(text)

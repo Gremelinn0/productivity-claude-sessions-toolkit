@@ -15,10 +15,10 @@ direct (~/.claude/projects/<cwd-encode>/<id>.jsonl -> imprime ce transcript, san
 bundle ni zip : c'est le chemin canonique du chip Mode B, cf import § capture d'ecran).
 
 Usage :
-    py tools/read_claude_session.py "<bundle-ou-zip>"                 # liste
-    py tools/read_claude_session.py "<bundle-ou-zip>" "LGM-CHROME"    # par titre
-    py tools/read_claude_session.py "<bundle-ou-zip>" 7fd1f354        # par id
-    py tools/read_claude_session.py "<...>/<id>.jsonl"                # .jsonl local direct
+    py scripts/read_claude_session.py "<bundle-ou-zip>"                 # liste
+    py scripts/read_claude_session.py "<bundle-ou-zip>" "LGM-CHROME"    # par titre
+    py scripts/read_claude_session.py "<bundle-ou-zip>" 7fd1f354        # par id
+    py scripts/read_claude_session.py "<...>/<id>.jsonl"                # .jsonl local direct
 """
 from __future__ import annotations
 import os
@@ -113,7 +113,7 @@ def main():
         print(f"- Volume  : {info['n_user']} user / {info['n_assistant']} assistant")
         print("\n---\n")
         for role, text, ts in parse_session_full(src_arg):
-            who = "FLORENT" if role == "user" else "CLAUDE"
+            who = "UTILISATEUR" if role == "user" else "CLAUDE"
             print(f"### {who}  [{fmt_date(ts)}]\n{text}\n")
         return
 
@@ -184,7 +184,7 @@ def main():
         print(f"- Volume  : {info['n_user']} user / {info['n_assistant']} assistant")
         print("\n---\n")
         for role, text, ts in parse_session_full(jf):
-            who = "FLORENT" if role == "user" else "CLAUDE"
+            who = "UTILISATEUR" if role == "user" else "CLAUDE"
             print(f"### {who}  [{fmt_date(ts)}]\n{text}\n")
     finally:
         if tmp:

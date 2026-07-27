@@ -38,6 +38,22 @@ vers le bon.
 /plugin install claude-sessions-toolkit
 ```
 
+## 🌍 Portabilité — ce que tu dois savoir avant d'installer
+
+**Classe : ADAPTABLE.** Le plugin ne dépend d'aucun compte, chemin ou dépôt de son auteur — mais il
+n'est pas neutre pour autant, et voici exactement où :
+
+| Point | État | Ce que ça implique pour toi |
+|---|---|---|
+| **Chemins** | Aucun chemin en dur. Tout part de `~/.claude/projects/` et de `%USERPROFILE%` | Rien à changer |
+| **Système** | **Windows-first** (voir la section suivante) | Sur Mac/Linux, le cœur marche, la recherche sidebar non |
+| **Python** | 3.x, **zéro dépendance externe** (`json`, `pathlib`, `zipfile` seulement) | Rien à installer |
+| **Compte Claude** | Aucun. Les scripts lisent des fichiers locaux | Marche même abonnement résilié |
+| **Exemples dans les skills** | Génériques (`mon-projet`, `C:\Users\<toi>\...`) | À remplacer par tes vrais chemins |
+
+Les fichiers que les scripts écrivent (exports, `.zip`, index) vont **où tu le demandes** via `--out`,
+avec un défaut sous `~/.claude/sessions-export/`. Rien n'est écrit ailleurs sans que tu l'aies dit.
+
 ## ⚠️ Setup requis côté plateforme
 
 - **Pensé et testé sur Windows.** Le mécanisme de base (`~/.claude/projects/*.jsonl`, en Python
