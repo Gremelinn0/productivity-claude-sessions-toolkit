@@ -1,4 +1,5 @@
 {
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
   "name": "claude-sessions-toolkit",
   "owner": {
     "name": "Florent Maisoncelle"
@@ -11,7 +12,8 @@
     {
       "name": "claude-sessions-toolkit",
       "source": "./",
-      "description": "Retrouve et relance une session Claude Code perdue (autre compte, sidebar vide, session morte), et transporte des sessions entre deux PC."
+      "description": "Retrouve et relance une session Claude Code perdue (autre compte, sidebar vide, session morte), et transporte des sessions entre deux PC.",
+      "category": "productivity"
     }
   ]
 }
